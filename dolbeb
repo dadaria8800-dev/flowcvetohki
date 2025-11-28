@@ -8,8 +8,10 @@ def index():
         phone_number = request.form.get('phone')
         if phone_number.isdigit():
             return f'Вы успешно вошли в аккаунт с номером! <3: {phone_number}'
+        elif phone_number.isalnum():
+            return f'ошибка, только цифры долбеб: {phone_number}'
         else:
-            return f'Ошибка, только цифры долбеб: {phone_number}'
+            return f'это чо ваще, только цифры долбеб: {phone_number}'
     return '''
        <form method="POST">
            Номер телефона: <input type="text" name="phone">
