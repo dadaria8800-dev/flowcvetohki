@@ -1,0 +1,21 @@
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        phone_number = request.form.get('phone')
+        if phone_number.isdigit():
+            return f'Вы успешно вошли в аккаунт с номером! <3: {phone_number}'
+        else:
+            return f'Ошибка, только цифры долбеб: {phone_number}'
+    return '''
+       <form method="POST">
+           Номер телефона: <input type="text" name="phone">
+           <input type="submit" value="Войти">
+       </form>
+       '''
+
+if __name__ == '__main__':
+    app.run()
