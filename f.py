@@ -1,0 +1,29 @@
+from flask import Flask, request
+def simple_check(text):
+    if not text:
+        return "Пустая строка"
+
+    if text.isdigit():
+        return f'Вы успешно вошли в аккаунт с номером! <3: {text}'
+    elif text.isalpha():
+        return f"какие буквы, только цифры долбеб:{text}"
+    elif text.isalnum():
+        return f'уже лучш,но только цифры долбеб: {text}'
+    else:
+        return f'это чо вщ, только цифры долбеб: {text}'
+app = Flask(__name__)
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        phone_number = request.form.get('phone')
+        return simple_check(phone_number)
+
+    return '''
+       <form method="POST">
+           Номер телефона: <input type="text" name="phone">
+           <input type="submit" value="Войти">
+       </form>
+       '''
+
+if __name__ == '__main__':
+    app.run()
