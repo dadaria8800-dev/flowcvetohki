@@ -17,10 +17,6 @@ def simple_check(text: str) -> str:
 
 
 def format_flowers(*flowers: str) -> str:
-    """
-    Принимает произвольное количество названий цветов
-    и собирает из них HTML-список <li>...</li>.
-    """
     items = ""
     for name in flowers:
         name = name.strip()
@@ -105,13 +101,13 @@ def index():
     <body>
         <div class="container">
             <h1>Цветочный магазин</h1>
-            <p>Введите номер телефона и список желаемых цветов через запятую.</p>
+            <p>Введите номер телефона и список желаемых цветов.</p>
 
             <form method="POST">
                 <label>Номер телефона:</label>
                 <input type="text" name="phone">
                 
-                <label>Цветы (через запятую):</label>
+                <label>Цветы:</label>
                 <input type="text" name="flowers"
                        placeholder="розы, тюльпаны, пионы">
 
