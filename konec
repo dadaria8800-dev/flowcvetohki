@@ -1,0 +1,127 @@
+from flask import Flask, request
+
+app = Flask(__name__)
+
+def simple_check(text: str) -> str:
+    if not text:
+        return "Пустая строка"
+
+    if text.isdigit():
+        return f'Вы успешно вошли в аккаунт с номером <3: {text}'
+    elif text.isalpha():
+        return f"Какие буквы, только цифры долбеб: {text}"
+    elif text.isalnum():
+        return f'Уже лучше, но только цифры долбеб: {text}'
+    else:
+        return f'Это что ваще, только цифры долбеб: {text}'
+
+
+def format_flowers(*flowers: str) -> str:
+    """
+    Принимает произвольное количество названий цветов
+    и собирает из них HTML-список <li>...</li>.
+    """
+    items = ""
+    for name in flowers:
+        name = name.strip()
+        if name:
+            items += f"<li>{name}</li>"
+    return items
+
+
+def parse_flowers(text: str) -> list[str]:
+    if not text:
+        return []
+    parts = text.split(",")
+    result = []
+    for p in parts:
+        name = p.strip()
+        if name:
+            result.append(name)
+    return result
+
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        phone_number = request.form.get("phone")
+        flowers_text = request.form.get("flowers")
+
+        login_result = simple_check(phone_number)
+
+
+        flowers_list = parse_flowers(flowers_text)
+        flowers_html = format_flowers(*flowers_list)
+
+        return f"""
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>Цветочный магазин</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; background:#FFF5EE; }}
+                .container {{ max-width:600px; margin:40px auto; padding:20px;
+                              background:white; border-radius:10px;
+                              box-shadow:0 0 10px rgba(0,0,0,0.1); }}
+                h1 {{ text-align:center; }}
+                label {{ display:block; margin-top:10px; }}
+                input[type="text"] {{ width:100%; padding:8px; box-sizing:border-box; }}
+                input[type="submit"] {{ margin-top:15px; padding:10px 20px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Цветочный магазин</h1>
+                <p>{login_result}</p>
+
+                <h2>Ваш заказ</h2>
+                {"<p>Вы не выбрали ни одного цветка.</p>" if not flowers_list else ""}
+                <ul>
+                    {flowers_html}
+                </ul>
+
+                <a href="/">Сделать новый заказ</a>
+            </div>
+        </body>
+        </html>
+        """
+
+    return """
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Цветочный магазин</title>
+        <style>
+            body { font-family: Arial, sans-serif; background:#FFF5EE; }
+            .container { max-width:600px; margin:40px auto; padding:20px;
+                         background:white; border-radius:10px;
+                         box-shadow:0 0 10px rgba(0,0,0,0.1); }
+            h1 { text-align:center; }
+            label { display:block; margin-top:10px; }
+            input[type="text"] { width:100%; padding:8px; box-sizing:border-box; }
+            input[type="submit"] { margin-top:15px; padding:10px 20px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Цветочный магазин</h1>
+            <p>Введите номер телефона и список желаемых цветов через запятую.</p>
+
+            <form method="POST">
+                <label>Номер телефона:</label>
+                <input type="text" name="phone">
+                
+                <label>Цветы (через запятую):</label>
+                <input type="text" name="flowers"
+                       placeholder="розы, тюльпаны, пионы">
+
+                <input type="submit" value="Оформить заказ">
+            </form>
+        </div>
+    </body>
+    </html>
+    """
+
+
+if __name__ == "__main__":
+    app.run()
